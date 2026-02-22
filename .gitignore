@@ -601,3 +601,14 @@ FodyWeavers.xsd
 # Additional files built by Visual Studio
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,rider,unrealengine,visualstudio,visualstudiocode
+
+# 这里是你之前可能已经有的其他忽略规则，比如操作系统文件
+.DS_Store
+Thumbs.db
+
+# Unreal Engine Generated Files
+DerivedDataCache/
+Intermediate/
+Saved/
+Binaries/
+Build/
