@@ -34,6 +34,12 @@ protected:
 //	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category="State|Health",meta=(AllowPrivateAccess = "ture"))
 //	float Health;
 
+	//BlueprintCallable: 允许在蓝图中调用该函数
+public:
+	UFUNCTION(BlueprintCallable)
+	void PlayerHealth();
+
+
 
 public:	
 	// Called every frame
