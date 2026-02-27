@@ -24,12 +24,15 @@ APlayerCharacter::APlayerCharacter() //定义玩家角色的构造函数
 	//设置摄像机臂组件的长度
 	CameraBoom->TargetArmLength = 500.0f;
 
+	CameraBoom->bUsePawnControlRotation = true; //让摄像机臂组件使用角色的控制旋转，这样摄像机会跟随角色的旋转
+
 	//添加摄像机组件
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 
 	//将摄像机组件附加到摄像机臂组件上
 	Camera->SetupAttachment(CameraBoom);
 
+	Camera->bUsePawnControlRotation = false; //让摄像机组件不使用角色的控制旋转，这样摄像机就不会跟随角色的旋转，而是保持固定的朝向
 	
 
 }
@@ -60,10 +63,46 @@ void APlayerCharacter::BeginPlay()
 void APlayerCharacter::Move(const FInputActionValue & value)
 {
 	UE_LOG(LogTemp, Display, TEXT("Run Move Function"));
+
+	FVector2D moveDir = value.Get<FVector2D>(); //Get<FVector2D>()函数是FInputActionValue结构体中的一个成员函数，用于获取输入动作值的二维向量表示。MovementVector是一个二维向量，包含了玩家在移动输入动作中提供的输入数据，例如按键的状态、鼠标的位置、手柄的摇杆方向等。
+	
+
+	if (Controller != nullptr) //如果控制器(Controller)不为空，则执行移动逻辑
+	{
+
+		FRotator rotation = GetActorRotation();
+		FRotator yawRotaition(0, rotation.Yaw, 0); //获取角色的旋转信息，并将其转换为只包含偏航角的旋转信息
+
+		//拿到角色旋转后的前向向量
+		FVector forward = FRotationMatrix(yawRotaition).GetUnitAxis(EAxis::Y);// FRotationMatrix()函数是UE4中的一个函数，用于将一个旋转信息转换为一个旋转矩阵。GetUnitAxis(EAxis::Y)函数是FRotationMatrix类中的一个成员函数，用于获取旋转矩阵中指定轴的单位向量。在这里，EAxis::Y表示获取旋转矩阵中的前向向量，即角色旋转后的前向方向。
+
+		//拿到角色旋转后的正右向量
+		FVector right = FRotationMatrix(yawRotaition).GetUnitAxis(EAxis::X);
+
+		//添加移动输入，前向向量乘以移动输入的Y分量，正右向量乘以移动输入的X分量
+		AddMovementInput(forward, moveDir.Y);
+		AddMovementInput(right, moveDir.X);
+
+		
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Controller is null"));
+	}
+
+
 }
 
 void APlayerCharacter::Look(const FInputActionValue& value)
 {
+	//获取Look输入动作的值，并将其转换为二维向量
+	FVector2D LookDir = value.Get<FVector2D>();
+
+	if (Controller != nullptr)
+	{
+		AddControllerPitchInput(LookDir.Y);
+		AddControllerYawInput(LookDir.X);
+	}
 
 }
 
@@ -80,7 +119,10 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	// MyInputComponent是一个指向UEnhancedInputComponent类型的指针，用于存储输入组件的实例。Cast<UEnhancedInputComponent>()函数是UE4中的一个模板函数，用于将一个对象转换为指定类型的指针，如果转换成功则返回该指针，否则返回nullptr。
 	if (MyInputComponent)
 	{
-		MyInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Jump);
+		MyInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Look);
+
+		MyInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &APlayerCharacter::Jump);
+		MyInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &APlayerCharacter::StopJumping);
 
 		MyInputComponent->BindAction(MoveAction,ETriggerEvent::Triggered,this,&APlayerCharacter::Move);
 //BindAction()函数是UEnhancedInputComponent类中的一个成员函数，用于绑定一个输入动作到一个函数。MoveAction是APlayerCharacter类中的一个成员变量，表示移动输入动作。ETriggerEvent::Triggered表示当输入动作被触发时调用绑定的函数。this表示当前对象的指针。&APlayerCharacter::Move表示要绑定的函数指针，指向APlayerCharacter类中的Move函数。
