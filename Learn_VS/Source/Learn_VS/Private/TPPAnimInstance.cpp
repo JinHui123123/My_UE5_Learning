@@ -20,7 +20,7 @@ void UTPPAnimInstance::NativeUpdateAnimation(float detetime)
 
 		FRotator rotator = PlayerCharacter->GetActorRotation();
 
-		deirection = CalculateDirection(velocity, rotator);
+		deirection = CalculateDirection(velocity, rotator);   
 
 		UCharacterMovementComponent* movement = PlayerCharacter->GetCharacterMovement();
 
