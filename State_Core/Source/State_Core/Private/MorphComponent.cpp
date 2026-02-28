@@ -83,7 +83,7 @@ void UMorphComponent::EndMorphCooldown()
 }
 
 // === 差异化移动/碰撞实现 ===
-// 这是实现玩法差异的核心部分
+// 实现玩法差异的核心部分
 
 void UMorphComponent::ApplySolidState()
 {
