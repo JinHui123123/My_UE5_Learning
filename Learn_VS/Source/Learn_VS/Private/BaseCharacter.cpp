@@ -2,6 +2,7 @@
 
 //导入当前类的头文件
 #include "BaseCharacter.h"
+#include "BaseWeapon.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter() //定义构造函数，构造函数的名字必须和类名一样
@@ -15,7 +16,23 @@ ABaseCharacter::ABaseCharacter() //定义构造函数，构造函数的名字必须和类名一样
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	EquipWeapon();
 	
+}
+
+void ABaseCharacter::EquipWeapon()
+{
+	Weapon = GetWorld()->SpawnActor<ABaseWeapon>(WeaponClass); // 创建武器Actor
+
+	if (Weapon) {
+		// 修正：直接创建 FAttachmentTransformRules 实例，而不是指针
+		FAttachmentTransformRules attachRules(EAttachmentRule::SnapToTarget, false);
+		Weapon->AttachToComponent(GetMesh(), attachRules, FName("WeaponPoint"));
+
+		Weapon->SetOwner(this);
+	}
+
 }
 
 // Called every frame

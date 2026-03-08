@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
+class ABaseWeapon;
 UCLASS()
 class LEARN_VS_API ABaseCharacter : public ACharacter
 {
@@ -18,6 +19,13 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;//运行时调用，调用一次
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WeaponClass")
+	TSubclassOf<ABaseWeapon> WeaponClass;
+
+	ABaseWeapon* Weapon;
+
+	void EquipWeapon();
 
 public:	
 	// Called every frame
