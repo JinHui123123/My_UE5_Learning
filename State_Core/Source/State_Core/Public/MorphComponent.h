@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -11,16 +9,16 @@
 UENUM(BlueprintType)  // 告诉UE这个枚举可以在蓝图中使用
 enum class EMorphState : uint8  // 使用enum class（C++11强类型枚举），:uint8指定底层类型
 {
-	MS_Solid      UMETA(DisplayName = "Solid"),     // 固态，在蓝图中显示为"Solid"
-	MS_Liquid     UMETA(DisplayName = "Liquid"),    // 液态
-	MS_Gas        UMETA(DisplayName = "Gas")        // 气态
+    MS_Solid      UMETA(DisplayName = "Solid"),     // 固态，在蓝图中显示为"Solid"
+    MS_Liquid     UMETA(DisplayName = "Liquid"),    // 液态
+    MS_Gas        UMETA(DisplayName = "Gas")        // 气态
 };
 // 这个枚举定义了角色的三种形态状态，UMETA用于在编辑器和蓝图中提供友好名称
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class STATE_CORE_API UMorphComponent : public UActorComponent
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
     UMorphComponent();  // 构造函数声明

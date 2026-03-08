@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "MorphComponent.h"
 #include "GameFramework/Character.h"        // 包含Character类，用于获取角色
 #include "GameFramework/CharacterMovementComponent.h"  // 包含角色移动组件
@@ -8,32 +5,32 @@
 // Sets default values for this component's properties
 UMorphComponent::UMorphComponent()
 {
-	PrimaryComponentTick.bCanEverTick = false;  // 设置组件不需要每帧Tick
-	CurrentState = EMorphState::MS_Solid;  // 初始化当前状态为固态
+    PrimaryComponentTick.bCanEverTick = false;  // 设置组件不需要每帧Tick
+    CurrentState = EMorphState::MS_Solid;  // 初始化当前状态为固态
 }
 // 注意：这里只是初始化成员变量，不进行复杂的逻辑
 
 // Called when the game starts
 void UMorphComponent::BeginPlay()
 {
-	Super::BeginPlay();  // 调用父类的BeginPlay
-	ApplySolidState();   // 应用初始状态（固态）的参数
-	// 这确保角色开始时具有正确的移动和碰撞设置
-	
+    Super::BeginPlay();  // 调用父类的BeginPlay
+    ApplySolidState();   // 应用初始状态（固态）的参数
+    // 这确保角色开始时具有正确的移动和碰撞设置
+
 }
 // === 公开的切换函数 ===
 // 这些是蓝图可以调用的简单包装函数
 void UMorphComponent::SwitchToSolid()
 {
-	if (bCanMorph) SwitchState(EMorphState::MS_Solid);  // 检查冷却，然后切换
+    if (bCanMorph) SwitchState(EMorphState::MS_Solid);  // 检查冷却，然后切换
 }
 void UMorphComponent::SwitchToLiquid()
 {
-	if (bCanMorph) SwitchState(EMorphState::MS_Liquid);
+    if (bCanMorph) SwitchState(EMorphState::MS_Liquid);
 }
 void UMorphComponent::SwitchToGas()
 {
-	if (bCanMorph) SwitchState(EMorphState::MS_Gas);
+    if (bCanMorph) SwitchState(EMorphState::MS_Gas);
 }
 
 // === 核心切换逻辑 ===
@@ -59,7 +56,7 @@ void UMorphComponent::SwitchState(EMorphState NewState)
     switch (CurrentState)
     {
     case EMorphState::MS_Solid: ApplySolidState(); break;
-    case EMorphState::MS_Liquid: ApplyLiquidState(); break; 
+    case EMorphState::MS_Liquid: ApplyLiquidState(); break;
     case EMorphState::MS_Gas: ApplyGasState(); break;
     }
 
